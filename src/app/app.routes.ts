@@ -1,7 +1,7 @@
 import { Routes } from "@angular/router";
-import { usuarioEstaLogadoResolver } from "./resolvers/usuario-esta-logado.resolver";
+import { userIsLoggedInResolver } from "./resolvers/user-is-logged-in.resolver";
 
-export const AppRotas: Routes = [
+export const AppRoutes: Routes = [
   {
     path: '',
     redirectTo: 'player',
@@ -11,7 +11,7 @@ export const AppRotas: Routes = [
     path: 'player',
     loadChildren: () => import('./pages/player/player.module').then(x => x.PlayerModule),
     resolve: {
-      usuarioEstaLogado: usuarioEstaLogadoResolver,
+      userIsLoggedIn: userIsLoggedInResolver,
     }
   },
   {

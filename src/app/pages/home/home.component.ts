@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { newMusica } from 'src/app/Common/factories';
-import { IMusica } from 'src/app/Interfaces/IMusica';
+import { newSong } from 'src/app/Common/factories';
+import { ISong } from 'src/app/Interfaces/ISong';
 import { PlayerService } from 'src/app/services/player.service';
 import { SpotifyService } from 'src/app/services/spotify.service';
 
@@ -13,13 +13,13 @@ import { SpotifyService } from 'src/app/services/spotify.service';
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  musicas: IMusica[] = []
-  musicaAtual: IMusica = newMusica();
+  songs: ISong[] = [];
+  currentSong: ISong = newSong();
 
   subs: Subscription[] = [];
 
-  // IconePlay
-  playIcone = faPlay;
+  // Play Icon
+  playIcon = faPlay;
 
   constructor(
     private spotifyService: SpotifyService,
@@ -27,33 +27,32 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.obterMusicas();
-    this.obterMusicaAtual();
+    this.getMusic();
+    this.getCurrentSong();
   }
 
   ngOnDestroy(): void {
     this.subs.forEach(sub => sub.unsubscribe());
   }
 
-  async obterMusicas() {
-    this.musicas = await this.spotifyService.buscarMusicas()
+  async getMusic() {
+    this.songs = await this.spotifyService.getSavedSongs();
   }
 
-  obterMusicaAtual(){
-    const sub = this.playerService.musicaAtual.subscribe(musica => {
-      this.musicaAtual = musica;
+  getCurrentSong(){
+    const sub = this.playerService.currentSong.subscribe(song => {
+      this.currentSong = song;
     });
 
     this.subs.push(sub);
   }
 
-  obterArtistas(musica: IMusica){
-    return musica.artistas.map(artista => artista.nome).join(', ');
+  getArtists(song: ISong){
+    return song.artists.map(artist => artist.name).join(', ');
   }
 
-  async executarMusica(musica: IMusica){
-    await this.spotifyService.executarMusica(musica.id);
-    this.playerService.definirMusicaAtual(musica);
+  async playSong(song: ISong){
+    await this.spotifyService.playSong(song.id);
+    this.playerService.setCurrentSong(song);
   }
-  
 }

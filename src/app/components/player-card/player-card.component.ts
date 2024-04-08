@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { faStepBackward, faStepForward } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { newMusica } from 'src/app/Common/factories';
-import { IMusica } from 'src/app/Interfaces/IMusica';
+import { newSong } from 'src/app/Common/factories';
+import { ISong } from 'src/app/Interfaces/ISong';
 import { PlayerService } from 'src/app/services/player.service';
 
 @Component({
@@ -12,37 +12,37 @@ import { PlayerService } from 'src/app/services/player.service';
 })
 export class PlayerCardComponent implements OnInit, OnDestroy {
 
-  musica: IMusica = newMusica();
-  subs: Subscription[] = []
+  music: ISong = newSong();
+  subs: Subscription[] = [];
 
-  // Icones
-  anteriorIcone = faStepBackward;
-  proximoIcone = faStepForward;
+  // Icons
+  previousIcon = faStepBackward;
+  nextIcon = faStepForward;
 
   constructor(private playerService: PlayerService) { }
 
   ngOnInit(): void {
-    this.obterMusicaTocando();
+    this.getPlayingMusic();
   }
 
   ngOnDestroy(): void {
     this.subs.forEach(sub => sub.unsubscribe());
   }
 
-  obterMusicaTocando(){
-    const sub = this.playerService.musicaAtual.subscribe(musica => {
-      this.musica = musica;
+  getPlayingMusic(): void {
+    const sub = this.playerService.currentSong.subscribe(music => {
+      this.music = music;
     });
 
     this.subs.push(sub);
   }
 
-  voltarMusica(){
-    this.playerService.voltarMusica();
+  goBack(): void {
+    this.playerService.previousSong();
   }
 
-  proximaMusica(){
-    this.playerService.proximaMusica();
+  goNext(): void {
+    this.playerService.nextSong();
   }
 
 }

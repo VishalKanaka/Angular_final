@@ -8,10 +8,10 @@ import { Component, Input, OnInit } from '@angular/core';
 export class BannerComponent implements OnInit {
 
   @Input()
-  ImagemUrl = '';
+  imageUrl = '';
   
   @Input()
-  Text = '';
+  text = '';
 
   constructor() { }
 

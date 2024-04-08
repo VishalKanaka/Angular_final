@@ -1,9 +1,9 @@
 import { Routes } from "@angular/router";
 import { HomeComponent } from "../home/home.component";
-import { ListaMusicaComponent } from "../lista-musica/lista-musica.component";
+import { MusicListComponent } from "../music-list/music-list.component";
 import { PlayerComponent } from "./player.component";
 
-export const PlayerRotas: Routes = [
+export const PlayerRoutes: Routes = [
   {
     path: '',
     component: PlayerComponent,
@@ -13,8 +13,8 @@ export const PlayerRotas: Routes = [
         component: HomeComponent
       },
       {
-        path: 'lista/:tipo/:id',
-        component: ListaMusicaComponent
+        path: 'list/:type/:id',
+        component: MusicListComponent
       }
     ]
   }

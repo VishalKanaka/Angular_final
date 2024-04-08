@@ -1,19 +1,18 @@
 <div class="container card p-10">
-  <div class="image" [style.background-image]="'url(' + musica.album.imagemUrl + ')'" ></div>
-  <div class="controles">
-    <span> {{musica.titulo }} </span>
-    <div class="botoes">
+  <div class="image" [style.background-image]="'url(' + music.album.imageUrl + ')'" ></div>
+  <div class="controls">
+    <span> {{ music.title }} </span>
+    <div class="buttons">
       <fa-icon 
-        [icon]="anteriorIcone" 
-        (click)="voltarMusica()"
+        [icon]="previousIcon" 
+        (click)="goBack()"
         >
       </fa-icon>
-      
       <fa-icon 
-        [icon]="proximoIcone"
-        (click)="proximaMusica()"
-        >
-      </fa-icon>
-    </div>
-  </div>
+    [icon]="nextIcon"
+    (click)="goNext()"
+    >
+  </fa-icon>
+</div>
+</div>
 </div>

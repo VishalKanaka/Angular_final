@@ -1,5 +1,5 @@
 @import 'table';
-@import 'variaveis';
+@import 'variables';
 
 :host {
   display: flex; 
@@ -9,7 +9,7 @@
     width: 7px;
 
     &-thumb {
-      background-color: rgba($cor-primaria, .2);
+      background-color: rgba($primary-color, .2);
       border-radius: 10px;
     }
 
@@ -18,7 +18,7 @@
     }
   }
 
-  .minhas-musicas {
+  .my-songs {
     padding: 0px 50px;
     padding-bottom: 20px;
     width: 100%;
@@ -30,7 +30,7 @@
     display: block;
   }
 
-  .painel-direito {
+  .right-panel {
     height: 100vh;
   }
 }

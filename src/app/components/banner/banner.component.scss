@@ -1,11 +1,11 @@
-@import 'variaveis';
-
+@import 'variables';
+@import 'table';
 .card {
   height: 200px;
   position: relative;
   overflow: hidden;
 
-  .artista {
+  .artist {
     position: absolute;
     top: 0;
     left: 0;
@@ -32,7 +32,7 @@
   }
 
   span {
-    color: $preto-transparent-70;
-    text-shadow: 2px 2px 10px $branco;
+    color: $black-transparent-70;
+    text-shadow: 2px 2px 10px $white;
   }
 }

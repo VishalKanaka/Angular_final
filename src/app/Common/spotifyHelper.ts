@@ -1,74 +1,75 @@
 import { addMilliseconds, format } from "date-fns";
-import { IArtista } from "../Interfaces/IArtista";
-import { IMusica } from "../Interfaces/IMusica";
+import { IArtist } from "../Interfaces/IArtist";
+import { ISong } from "../Interfaces/ISong";
 import { IPlaylist } from "../Interfaces/IPlaylist";
-import { IUsuario } from "../Interfaces/IUsuario";
-import { newMusica, newPlaylist } from "./factories";
+import { IUser } from "../Interfaces/IUser";
+import { newSong, newPlaylist } from "./factories";
 
+export function SpotifyUserToUser(user: SpotifyApi.CurrentUsersProfileResponse): IUser {
+  // Safely access the last image's URL, if available
+  const imageUrl = user.images.length > 0 ? user.images[user.images.length - 1].url : null;
 
-
-
-
-
-export function SpotifyUserParaUsuario(user: SpotifyApi.CurrentUsersProfileResponse): IUsuario{
-   return {
-     id: user.id,
-     nome: user.display_name,
-     imagemUrl: user.images.pop().url
-   }
+  return {
+    id: user.id,
+    name: user.display_name || 'No Name', // Provide a fallback in case display_name is not set
+    imageUrl: imageUrl // This could be null if no images are available
+  }
 }
 
-export function SpotifyPlaylistParaPlaylist(playlist: SpotifyApi.PlaylistObjectSimplified): IPlaylist{
+
+export function SpotifyPlaylistToPlaylist(playlist: SpotifyApi.PlaylistObjectSimplified): IPlaylist {
+  // Check if 'images' is not null and has at least one element
+  const imageUrl = playlist.images && playlist.images.length > 0 ? playlist.images.pop().url : 'defaultImageUrlHere';
+
   return {
     id: playlist.id,
-    nome: playlist.name,
-    imagemUrl: playlist.images.pop().url
+    name: playlist.name,
+    imageUrl: imageUrl, // Use the imageUrl from above, with a fallback if necessary
   };
 }
 
-export function SpotifySinglePlaylistParaPlaylist(playlist: SpotifyApi.SinglePlaylistResponse ): IPlaylist {
+
+export function SpotifySinglePlaylistToPlaylist(playlist: SpotifyApi.SinglePlaylistResponse): IPlaylist {
   if (!playlist)
     return newPlaylist();
 
   return {
     id: playlist.id,
-    nome: playlist.name,
-    imagemUrl: playlist.images.shift().url,
-    musicas: []
+    name: playlist.name,
+    imageUrl: playlist.images.shift().url,
+    songs: []
   }
-
 }
 
-export function SpotifyArtistaParaArtista(spotifyArtista: SpotifyApi.ArtistObjectFull) :  IArtista{
+export function SpotifyArtistToArtist(spotifyArtist: SpotifyApi.ArtistObjectFull): IArtist {
   return {
-    id: spotifyArtista.id,
-    imagemUrl: spotifyArtista.images.sort((a,b) => a.width - b.width).pop().url,
-    nome: spotifyArtista.name
+    id: spotifyArtist.id,
+    imageUrl: spotifyArtist.images.sort((a, b) => a.width - b.width).pop().url,
+    name: spotifyArtist.name
   };
 }
 
-export function SpotifyTrackParaMusica(spotifyTrack: SpotifyApi.TrackObjectFull) : IMusica{
-  
+export function SpotifyTrackToSong(spotifyTrack: SpotifyApi.TrackObjectFull): ISong {
   if (!spotifyTrack)
-    return newMusica();
+    return newSong();
 
-  const msParaMinutos = (ms: number) => {
-    const data = addMilliseconds(new Date(0), ms);
-    return format(data, 'mm:ss');
+  const msToMinutes = (ms: number) => {
+    const date = addMilliseconds(new Date(0), ms);
+    return format(date, 'mm:ss');
   }
-  
+
   return {
     id: spotifyTrack.uri,
-    titulo: spotifyTrack.name,
+    title: spotifyTrack.name,
     album: {
       id: spotifyTrack.id,
-      imagemUrl: spotifyTrack.album.images.shift().url,
-      nome: spotifyTrack.album.name
+      imageUrl: spotifyTrack.album.images.shift().url,
+      name: spotifyTrack.album.name
     },
-    artistas: spotifyTrack.artists.map(artista => ({
-      id: artista.id,
-      nome: artista.name
+    artists: spotifyTrack.artists.map(artist => ({
+      id: artist.id,
+      name: artist.name
     })),
-    tempo: msParaMinutos(spotifyTrack.duration_ms),
+    duration: msToMinutes(spotifyTrack.duration_ms),
   }
 }
